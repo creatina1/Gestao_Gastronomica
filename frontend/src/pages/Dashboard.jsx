@@ -88,7 +88,7 @@ function Dashboard() {
 
   const canManageMenu = ['admin', 'gerente'].includes(user.role);
   const canAccessMenu = ['admin', 'gerente', 'atendimento', 'user'].includes(user.role);
-  const canAccessOrders = ['admin', 'gerente', 'atendimento'].includes(user.role);
+  const canAccessOrders = ['admin', 'gerente', 'atendimento', 'user'].includes(user.role);
   const canAccessInventory = ['admin', 'gerente', 'cozinha'].includes(user.role);
 
   // Métricas reais do estoque para o card de resumo
@@ -338,7 +338,6 @@ function Dashboard() {
       showMessage(err.response?.data?.message || 'Erro ao enviar pedido.', 'error');
     }
   };
-
   const showMessage = (text, type = 'success') => {
     setMessage({ text, type });
     setTimeout(() => setMessage({ text: '', type: '' }), 5000);
@@ -681,6 +680,32 @@ function Dashboard() {
                   📤 Enviar pedido
                 </button>
                 <button className="btn-cart-clear" onClick={clearCart}>Limpar carrinho</button>
+              </div>
+            )}
+
+            {/* Pedidos anteriores do usuário */}
+            {orders.length > 0 && (
+              <div className="cart-orders-history">
+                <h4 className="cart-orders-title">Seus pedidos</h4>
+                {orders.map((order) => (
+                  <div key={order.id} className={`cart-order-item ${order.status === 'Concluído' ? 'cart-order-done' : ''}`}>
+                    <div className="cart-order-header">
+                      <span className="cart-order-id">Pedido #{order.id}</span>
+                      <span className={`cart-order-status badge ${order.status === 'Concluído' ? 'badge-success' : 'badge-warning'}`}>
+                        {order.status}
+                      </span>
+                    </div>
+                    {order.table_number && (
+                      <span className="cart-order-table">🍽️ Mesa {order.table_number}</span>
+                    )}
+                    <ul className="cart-order-items">
+                      {order.items.map((item, idx) => (
+                        <li key={idx}>{item.quantity}× {item.name}</li>
+                      ))}
+                    </ul>
+                    <span className="cart-order-total">R$ {order.total.toFixed(2)}</span>
+                  </div>
+                ))}
               </div>
             )}
           </aside>

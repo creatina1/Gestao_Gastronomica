@@ -2,7 +2,7 @@ const express = require('express');
 const { getDb } = require('../db');
 
 const router = express.Router();
-const orderRoles = ['admin', 'gerente', 'atendimento'];
+const orderRoles = ['admin', 'gerente', 'atendimento', 'user'];
 const kitchenRoles = ['admin', 'gerente', 'cozinha'];
 
 router.get('/', (req, res) => {
@@ -11,6 +11,21 @@ router.get('/', (req, res) => {
   }
 
   const db = getDb();
+
+  // usuário comum vê apenas seus próprios pedidos
+  if (req.user.role === 'user') {
+    db.all(
+      'SELECT * FROM orders WHERE customer_name = ? ORDER BY created_at DESC',
+      [req.user.name],
+      (err, rows) => {
+        db.close();
+        if (err) return res.status(500).json({ message: 'Erro ao buscar pedidos.' });
+        res.json(rows.map((row) => ({ ...row, items: JSON.parse(row.items) })));
+      }
+    );
+    return;
+  }
+
   db.all('SELECT * FROM orders ORDER BY created_at DESC', [], (err, rows) => {
     db.close();
     if (err) {
