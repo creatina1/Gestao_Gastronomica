@@ -105,16 +105,24 @@ body {
   right: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-light);
+  border-radius: 0.5rem;
+  color: var(--text);
   cursor: pointer;
-  font-size: 1.1rem;
-  padding: 0.25rem;
+  font-size: 1.2rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s;
+  line-height: 1;
 }
 
 .password-toggle-button:hover {
-  color: var(--text);
+  background: rgba(34, 197, 94, 0.15);
+  border-color: var(--primary);
 }
 
 .password-toggle-button svg {
