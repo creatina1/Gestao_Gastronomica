@@ -45,6 +45,7 @@ router.post('/register', async (req, res) => {
           role,
         };
         const token = generateToken(user);
+        db.close();
         res.json({ user, token });
       }
     );

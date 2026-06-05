@@ -77,4 +77,25 @@ router.put('/:id', (req, res) => {
   });
 });
 
+router.delete('/:id', (req, res) => {
+  const managerRoles = ['admin', 'gerente'];
+  if (!managerRoles.includes(req.user.role)) {
+    return res.status(403).json({ message: 'Apenas gerentes ou administradores podem excluir pedidos.' });
+  }
+
+  const { id } = req.params;
+  const db = getDb();
+
+  db.run('DELETE FROM orders WHERE id = ?', [id], function (err) {
+    db.close();
+    if (err) {
+      return res.status(500).json({ message: 'Erro ao excluir pedido.' });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ message: 'Pedido não encontrado.' });
+    }
+    res.json({ message: 'Pedido excluído com sucesso.' });
+  });
+});
+
 module.exports = router;

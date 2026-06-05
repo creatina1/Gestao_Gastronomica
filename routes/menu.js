@@ -29,21 +29,19 @@ router.post('/', (req, res) => {
     return res.status(403).json({ message: 'Apenas administradores ou gerentes podem criar itens.' });
   }
 
-  const { name, description, price, category, available } = req.body;
+  const { name, description, price, category, available, image_url } = req.body;
   if (!name || !price) {
     return res.status(400).json({ message: 'Nome e preço são obrigatórios.' });
   }
 
   const db = getDb();
   db.run(
-    'INSERT INTO menu_items (name, description, price, category, available) VALUES (?, ?, ?, ?, ?)',
-    [name, description || '', Number(price), category || 'Principal', available ? 1 : 0],
+    'INSERT INTO menu_items (name, description, price, category, available, image_url) VALUES (?, ?, ?, ?, ?, ?)',
+    [name, description || '', Number(price), category || 'Principal', available ? 1 : 0, image_url || null],
     function (err) {
       db.close();
-      if (err) {
-        return res.status(500).json({ message: 'Erro ao criar item.' });
-      }
-      res.json({ id: this.lastID, name, description, price: Number(price), category, available: available ? 1 : 0 });
+      if (err) return res.status(500).json({ message: 'Erro ao criar item.' });
+      res.json({ id: this.lastID, name, description, price: Number(price), category, available: available ? 1 : 0, image_url: image_url || null });
     }
   );
 });
@@ -54,21 +52,19 @@ router.put('/:id', (req, res) => {
   }
 
   const { id } = req.params;
-  const { name, description, price, category, available } = req.body;
+  const { name, description, price, category, available, image_url } = req.body;
   if (!name || !price) {
     return res.status(400).json({ message: 'Nome e preço são obrigatórios.' });
   }
 
   const db = getDb();
   db.run(
-    'UPDATE menu_items SET name = ?, description = ?, price = ?, category = ?, available = ? WHERE id = ?',
-    [name, description || '', Number(price), category || 'Principal', available ? 1 : 0, id],
+    'UPDATE menu_items SET name = ?, description = ?, price = ?, category = ?, available = ?, image_url = ? WHERE id = ?',
+    [name, description || '', Number(price), category || 'Principal', available ? 1 : 0, image_url || null, id],
     function (err) {
       db.close();
-      if (err) {
-        return res.status(500).json({ message: 'Erro ao atualizar item.' });
-      }
-      res.json({ id: Number(id), name, description, price: Number(price), category, available: available ? 1 : 0 });
+      if (err) return res.status(500).json({ message: 'Erro ao atualizar item.' });
+      res.json({ id: Number(id), name, description, price: Number(price), category, available: available ? 1 : 0, image_url: image_url || null });
     }
   );
 });
