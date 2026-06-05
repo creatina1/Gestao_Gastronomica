@@ -11,7 +11,11 @@ const { authenticateToken } = require('./auth');
 const app = express();
 const DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
 
-app.use(cors({ origin: ['http://localhost:4000', 'http://localhost:4001', 'http://localhost:5173', 'http://localhost:5174'] }));
+app.use(cors({
+  origin: process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',')
+    : ['http://localhost:4000', 'http://localhost:4001', 'http://localhost:5173', 'http://localhost:5174']
+}));
 app.use(express.json());
 
 initDb();
