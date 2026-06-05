@@ -1480,14 +1480,42 @@ textarea {
     grid-template-columns: 1fr;
   }
 
+  .profile-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
   .profile-fullscreen {
     max-width: 100%;
-    max-height: 100vh;
-    border-radius: 0;
+    width: 100%;
+    max-height: 92vh;
+    border-radius: 1.25rem 1.25rem 0 0;
+  }
+
+  .profile-fullscreen-header {
+    border-radius: 1.25rem 1.25rem 0 0;
+    padding: 1.25rem 1.25rem 1rem;
   }
 
   .profile-fullscreen-body {
     padding: 1.25rem;
+  }
+
+  .info-row {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+
+  .info-row .label {
+    min-width: unset;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .profile-avatar-big {
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 1.5rem;
   }
 
   .menu-cards-grid {
