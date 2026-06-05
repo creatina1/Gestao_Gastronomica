@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { initDb } = require('./db');
 const authRoutes = require('./routes/auth');
 const menuRoutes = require('./routes/menu');
@@ -28,6 +29,13 @@ app.use('/api/settings', settingsRoutes);
 
 app.get('/api/status', (req, res) => {
   res.json({ status: 'ok', message: 'API do sistema gastronômico está rodando' });
+});
+
+// Serve frontend estático em produção
+const frontendPath = path.join(__dirname, 'public');
+app.use(express.static(frontendPath));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
 function startServer(port, attemptsLeft = 5) {
